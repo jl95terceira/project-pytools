@@ -5,8 +5,6 @@ import os.path
 import re
 import typing
 
-from batteries import *
-
 @dataclasses.dataclass
 class DiffResults:
 
@@ -55,7 +53,7 @@ if __name__ == '__main__':
                    default='.*')
     p.add_argument(f'--{A.DUMP_FILE_NAME}',
                    help='name of file to which to dump the analysis result, if desired')
-    get_ = agetter(p.parse_args())
+    get_ = p.parse_args().__getattribute__
     # do it
     dump_fn         = get_(A.DUMP_FILE_NAME) if get_(A.DUMP_FILE_NAME) else None
     f:typing.TextIO = None if dump_fn is None else open(dump_fn, mode='w')

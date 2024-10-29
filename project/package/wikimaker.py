@@ -1,16 +1,16 @@
 import os
 import os.path
 
-import env
-import batteries
+from   jl95terceira         import batteries
+from   jl95terceira.pytools import envlib as env
 
 THIS_DIR         = os.path.split(__file__)[0]
-OUTPUT_FILE_PATH = os.path.join(batteries.TEMP_DIR,'tkwiki.md')
+OUTPUT_FILE_PATH = os.path.join(batteries.os.TEMP_DIR,'pytools-wiki.md')
 
 def do_it(wikifn:str):
 
-    verbose_original = env.state.verbos
-    env.state.verbos = env.Verbosities.OFF
+    verbose_original       = env.state.State.verbos
+    env.state.State.verbos = env.state.Verbosities.OFF
     def get_fns():
 
         return os.listdir(THIS_DIR)
@@ -45,7 +45,7 @@ def do_it(wikifn:str):
         f.write('</ul>\n\n')
     
     print(f'Done.\nWritten to: {wikifn}')
-    env.state.verbos = verbose_original
+    env.state.State.verbos = verbose_original
 
 if __name__ == '__main__':
 

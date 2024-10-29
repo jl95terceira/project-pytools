@@ -3,8 +3,6 @@ import os.path
 import subprocess
 import typing
 
-from batteries import *
-
 def do_it(fn       :str,
           wd       :str|None  =None,
           ow_prompt:typing.Callable[[],bool]|None=None,
@@ -30,7 +28,7 @@ def do_it(fn       :str,
 if __name__ == '__main__':
 
     import argparse
-    import env
+    from   jl95terceira.pytools.envlib.vars.builtin import EDITOR
 
     class A:
 
@@ -56,7 +54,7 @@ if __name__ == '__main__':
                    help='open the file with the default editor, after creating the file',
                    action='store_true')
     # do it
-    get = agetter(p.parse_args())
+    get = p.parse_args().__getattribute__
     OVERWRITE_CONFIRMATION_WORD = 'ow'
     success = do_it(fn       =get(A.FILE_NAME),
                     wd       =get(A.WORKING_DIR),
@@ -65,4 +63,4 @@ if __name__ == '__main__':
     
     if success and get(A.OPEN):
 
-        subprocess.run([env.Vars.EDITOR.get(), get(A.FILE_NAME)], shell=True)
+        os.system(EDITOR.get()(get(A.FILE_NAME)))

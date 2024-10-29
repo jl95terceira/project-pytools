@@ -3,7 +3,7 @@ import os.path
 import re
 import typing
 
-import printf
+from   jl95terceira.pytools import printf
 
 def do_it(wd     :str,
           fnpat  :str                            =None,

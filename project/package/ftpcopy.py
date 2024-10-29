@@ -49,27 +49,36 @@ if __name__ == '__main__':
 
     import argparse
 
+    class A:
+
+        SOURCE_PATH         = 'spath'
+        FILENAME_REGEX      = 'fre'
+        DESTINATION_ADDRESS = 'daddr'
+        DESTINATION_USER    = 'duser'
+        DESTINATION_PASS    = 'dpass'
+        DESTINATION_PATH    = 'dpath'
+
     p = argparse.ArgumentParser(description='Copy files to a remote directory via FTP / SSH')
-    p.add_argument('spath',
+    p.add_argument(f'{A.SOURCE_PATH}',
                    help='source (local) path')
-    p.add_argument('--fre',
+    p.add_argument(f'--{A.FILENAME_REGEX}',
                    help='source (local) file name regex, to filter files to copy')
-    p.add_argument('daddr',
+    p.add_argument(f'{A.DESTINATION_ADDRESS}',
                    help='destination (remote) SSH address in form \'{ip address}:{port}\'')
-    p.add_argument('duser',
+    p.add_argument(f'{A.DESTINATION_USER}',
                    help='destination (remote) user name')
-    p.add_argument('dpass',
+    p.add_argument(f'{A.DESTINATION_PASS}',
                    help='destination (remote) password')
-    p.add_argument('dpath',
+    p.add_argument(f'{A.DESTINATION_PATH}',
                    help='destination (remote) path')
-    args = p.parse_args()
+    get = p.parse_args().__getattribute__
     # do it
-    ip_addr,port = (lambda a,b: (a, int(b)))(*map(str.strip, args.daddr.split(':')))
+    ip_addr,port = (lambda a,b: (a, int(b)))(*map(str.strip, str(get(A.DESTINATION_ADDRESS)).split(':')))
     print([ip_addr, port])
-    do_it(path_src    =args.spath,
-         fn_filter   =lambda fn: (re.search(pattern=args.fre,string=fn)) if args.fre is not None else lambda fn: True,
+    do_it(path_src    =get(A.SOURCE_PATH),
+         fn_filter   =lambda fn: (re.search(pattern=get(A.FILENAME_REGEX),string=fn)) if get(A.FILENAME_REGEX) is not None else lambda fn: True,
          ssh_ip_addr =ip_addr,
          ssh_port    =port,
-         ssh_username=args.duser,
-         ssh_password=args.dpass,
-         path_dst    =args.dpath)
+         ssh_username=get(A.DESTINATION_USER),
+         ssh_password=get(A.DESTINATION_PASS),
+         path_dst    =get(A.DESTINATION_PATH))

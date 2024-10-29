@@ -1,7 +1,5 @@
 import uuid
 
-from batteries import *
-
 def get(upper :bool=False,
         squash:bool=False):
 
@@ -27,7 +25,7 @@ if __name__ == '__main__':
                    help='remove hyphens',
                    action='store_true')
     # parse args
-    get_ = agetter(p.parse_args())
+    get_ = p.parse_args().__getattribute__
     # do it
     print(get(upper =get_(A.UPPER_CASE),
               squash=get_(A.SQUASH)))

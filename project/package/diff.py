@@ -2,8 +2,6 @@ import dataclasses
 import mmap
 import typing
 
-from batteries import *
-
 @dataclasses.dataclass
 class Result:
 
@@ -41,7 +39,7 @@ if __name__ == '__main__':
                    help='file #1')
     p.add_argument(f'{A.FILE_2}',
                    help='file #2')
-    get = agetter(p.parse_args())
+    get = p.parse_args().__getattribute__
     # do it
     res = do_it(fn1 =get(A.FILE_1),
                 fn2 =get(A.FILE_2))

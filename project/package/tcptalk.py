@@ -47,14 +47,19 @@ if __name__ == '__main__':
 
     import argparse
 
+    class A:
+
+        NET_ADDRESS = 'a'
+        AUTO        = 'auto'
+
     p = argparse.ArgumentParser(description='Listen on a given network address and print to the console incoming data')
-    p.add_argument('a',
+    p.add_argument(f'{A.NET_ADDRESS}',
                    help  =f'network address to talk to, in the form {{IP address}}:{{TCP port}}')
-    p.add_argument('--auto',
+    p.add_argument(f'--{A.AUTO}',
                    help  =f'send messages automatically - useful if the intention is simply to observe at the server-side whether the server is receiving messages (and, thus, functioning)',
                    action='store_true')
-    args         = p.parse_args()
-    ip_addr,port = args.a.split(':')
+    get          = p.parse_args().__getattribute__
+    ip_addr,port = get(A.NET_ADDRESS).split(':')
     do_it(ip_addr=ip_addr,
           port   =port,
-          auto   =args.auto)
+          auto   =get(A.AUTO))

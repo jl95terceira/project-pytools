@@ -1,8 +1,6 @@
 import os.path
 import shutil
 
-from batteries import *
-
 def main(src:str,
          dst:str):
     
@@ -22,6 +20,6 @@ if __name__ == '__main__':
                    help='source directory')
     p.add_argument(f'{A.DESTINATION}',
                    help='destination directory')
-    get = agetter(p.parse_args())
+    get = p.parse_args().__getattribute__
     main(src=get(A.SOURCE),
          dst=get(A.DESTINATION))

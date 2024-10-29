@@ -1,8 +1,6 @@
 import os.path
 import shutil
 
-from batteries import *
-
 def do_it(fpath_from:str,
          dir_to    :str,
          fname_to  :str):
@@ -27,7 +25,7 @@ if __name__ == '__main__':
                    help='destination directory')
     p.add_argument(f'--{A.DEST_FILE_NAME}',
                    help='destination file name, if to be different')
-    get = agetter(p.parse_args())
+    get = p.parse_args().__getattribute__
     do_it(fpath_from=get(A.SOURCE_PATH),
           dir_to    =get(A.DEST_DIR),
           fname_to  =get(A.DEST_FILE_NAME))

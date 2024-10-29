@@ -3,7 +3,7 @@ import operator
 import os
 import os.path
 
-import hashf
+from   jl95terceira.pytools import hashf
 
 def do_it(h    :str,
           wd   :str,

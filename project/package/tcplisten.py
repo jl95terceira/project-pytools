@@ -23,9 +23,13 @@ if __name__ == '__main__':
 
     import argparse
 
+    class A:
+
+        NET_ADDRESS = 'a'
+
     p = argparse.ArgumentParser(description='Listen on a given network address and print to the console incoming data')
-    p.add_argument('a',
+    p.add_argument(f'{A.NET_ADDRESS}',
                    help  =f'network address to listen on, in the form {{IP address}}:{{TCP port}}')
-    args         = p.parse_args()
-    ip_addr,port = args.a.split(':')
+    get          = p.parse_args().__getattribute__
+    ip_addr,port = get(A.NET_ADDRESS).split(':')
     do_it(ip_addr=ip_addr,port=port)

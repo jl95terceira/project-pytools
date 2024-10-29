@@ -4,8 +4,6 @@ import os.path
 import re
 import typing
 
-from batteries import *
-
 @dataclasses.dataclass
 class Result:
 
@@ -99,18 +97,17 @@ if __name__ == '__main__':
                    help='consider string as regex',
                    action='store_true')
     p.add_argument(f'--{A.LESS}',
-                   help=f'do NOT print matches, in the case of regex search\nBy default, when matching with a regex via option {A.REGEX}, the matches are printed along with the occurrences.',
+                   help=f'do NOT print matches, in the case of regex search (less verbose)\nBy default, when matching with a regex via option {A.REGEX}, the matches are printed along with the occurrences.',
                    action='store_true')
     p.add_argument(f'--{A.NO_ERRORS}',
                    help=f'silence errors when they happen\nBy default, errors on opening files for reading are printed.',
                    action='store_true')
-    get = agetter(p.parse_args())
+    get = p.parse_args().__getattribute__
     # do it
-    enc_xor = xor_None(get(A.ENCODING), get(A.ENCODING_FUNCTION))
-    if enc_xor is XOR_FALSE_ALL:
+    enc_excl  = (A.ENCODING, A.ENCODING_FUNCTION,)
+    if len(tuple(filter(lambda a: get(a) is not None, enc_excl))) > 1:
 
-        emsg = f'both options {A.ENCODING} and {A.ENCODING_FUNCTION} given - only 1 allowed'
-        raise Exception(emsg)
+        raise Exception(f'all of options {enc_excl} given - only 1 allowed')
 
     main(wd          =get(A.WORKIND_DIR),
          fn_regex    =get(A.FILENAME_REGEX) if not get(A.ALL_FILES) else '.*',

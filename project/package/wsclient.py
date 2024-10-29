@@ -32,25 +32,31 @@ if __name__ == '__main__':
     }
     SSL_PROTOCOL_VERSION_DEFAULT = object()
     
+    class A: 
+
+        NET_ADDRESS   = 'addr'
+        ASSUME_SSL    = 'ssl'
+        ASSUME_NO_SSL = 'nossl'
+
     p = argparse.ArgumentParser(formatter_class=argparse.RawTextHelpFormatter,
                                 description    ='Connect to a websocket server')
-    p.add_argument('addr', 
+    p.add_argument(f'{A.NET_ADDRESS}', 
                    help='websocket server network address')
-    p.add_argument('--ssl', 
+    p.add_argument(f'--{A.ASSUME_SSL}', 
                    help   ='force assume SSL and, if a value is given, assume the value as the SSL protocol version (default = \'1.2\')\nThis option is mutually exclusive with option \'--nossl\'.',
                    nargs  ='?',
                    default=None,
                    const  =SSL_PROTOCOL_VERSION_DEFAULT)
-    p.add_argument('--nossl',
+    p.add_argument(f'--{A.ASSUME_NO_SSL}',
                    help  ='force assume no SSL\nThis option is mutually exclusive with option \'--ssl\'.',
                    action='store_true')
-    args = p.parse_args()
-    if args.ssl is not None and args.nossl:
+    get = p.parse_args().__getattribute__
+    if get(A.ASSUME_SSL) is not None and get(A.ASSUME_NO_SSL):
 
-        emsg = 'options --ssl and --nossl are mutually exclusive'
+        emsg = f'options --{A.ASSUME_SSL} and --{A.ASSUME_NO_SSL} are mutually exclusive'
         raise Exception(emsg)
 
-    do_it(url     =args.addr,
-          protocol=None if args.ssl is None else SSL_PROTOCOL_VERSION_DICT[args.ssl] if args.ssl is not SSL_PROTOCOL_VERSION_DEFAULT else None,
-          auto_ssl=args.ssl is     None and not args.nossl,
-          use_ssl =args.ssl is not None or  not args.nossl)
+    do_it(url     =get(A.NET_ADDRESS),
+          protocol=None if get(A.ASSUME_SSL) is None else SSL_PROTOCOL_VERSION_DICT[get(A.ASSUME_SSL)] if get(A.ASSUME_SSL) is not SSL_PROTOCOL_VERSION_DEFAULT else None,
+          auto_ssl=get(A.ASSUME_SSL) is     None and not get(A.ASSUME_NO_SSL),
+          use_ssl =get(A.ASSUME_SSL) is not None or  not get(A.ASSUME_NO_SSL))

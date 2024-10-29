@@ -2,8 +2,6 @@ import os
 import os.path
 import re
 
-from batteries import *
-
 def main(wd      :str,
          fn_regex:str):
 
@@ -42,7 +40,7 @@ if __name__ == '__main__':
                    default='.')
     p.add_argument(f'{A.FILE_NAME_REGEX}',
                    help   ='file name regex to consider')
-    get = agetter(p.parse_args())
+    get = p.parse_args().__getattribute__
     # do it
     main(wd      =get(A.WORKING_DIRECTORY),
          fn_regex=get(A.FILE_NAME_REGEX))

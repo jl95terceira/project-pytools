@@ -124,7 +124,7 @@ def main():
                    help   =f'step [milliseconds] with which to follow / to check connection availability\nDefault: {FOLLOW_STEP_MS_DEFAULT}\nIf this option is set, there is not need to give option --{repr(A.FOLLOW)}.',
                    type   =int)
     # parse
-    def get   (a:str,_args=p.parse_args()): return getattr(_args,a)
+    get = p.parse_args().__getattribute__
     def get_or(a:str, dv): (lambda v: v if v is not None else dv)(get(a))
     # do it
     do_it(addr          =get   (A.ADDRESS),
