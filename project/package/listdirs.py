@@ -54,7 +54,7 @@ def do_it(wd    :str,
 
             _do_it(wd=wd, handler=_handler)
 
-if __name__ == '__main__':
+def main():
 
     import argparse
 
@@ -80,3 +80,5 @@ if __name__ == '__main__':
     do_it(wd    =get(A.WORKING_DIR),
           fn_out=get(A.DUMP_FILE),
           filter=re.compile(get(A.REGEX_FILTER)).search)
+    
+    if __name__ == '__main__': main()

@@ -47,7 +47,7 @@ def do_it(wikifn:str):
     print(f'Done.\nWritten to: {wikifn}')
     env.state.State.verbos = verbose_original
 
-if __name__ == '__main__':
+def main():
 
     import argparse
 
@@ -58,3 +58,5 @@ if __name__ == '__main__':
                    default=OUTPUT_FILE_PATH)
     args = p.parse_args()
     do_it(wikifn=args.f)
+
+if __name__ == '__main__': main()

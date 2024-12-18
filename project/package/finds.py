@@ -11,13 +11,13 @@ class Result:
     n      :int
     matches:list[typing.Any]
 
-def main(wd          :str,
-         fn_regex    :str,
-         encf        :typing.Callable[[str],str],
-         string      :str,
-         as_regex    :bool=False,
-         show_matches:bool=True,
-         no_errors   :bool=False):
+def do_it(wd          :str,
+          fn_regex    :str,
+          encf        :typing.Callable[[str],str],
+          string      :str,
+          as_regex    :bool=False,
+          show_matches:bool=True,
+          no_errors   :bool=False):
 
     if not isinstance(encf, typing.Callable): raise Exception(f'encoding is expected as function of filename (callable) - got type {type(encf)} instead')
     pattern = re.compile(fn_regex)
@@ -56,7 +56,7 @@ def main(wd          :str,
 
         print('Not any file with occurrences.')
 
-if __name__ == '__main__':
+def main():
 
     import argparse
 
@@ -109,10 +109,12 @@ if __name__ == '__main__':
 
         raise Exception(f'all of options {enc_excl} given - only 1 allowed')
 
-    main(wd          =get(A.WORKIND_DIR),
-         fn_regex    =get(A.FILENAME_REGEX) if not get(A.ALL_FILES) else '.*',
-         encf        =eval(get(A.ENCODING_FUNCTION)) if get(A.ENCODING_FUNCTION) is not None else (lambda fn,_enc=get(A.ENCODING): _enc) if get(A.ENCODING) is not None else lambda fn: 'utf-8',
-         string      =get(A.STRING) if not get(A.STRING_LITERAL) else eval(get(A.STRING)),
-         as_regex    =get(A.REGEX),
-         show_matches=not get(A.LESS),
-         no_errors   =get(A.NO_ERRORS))
+    do_it(wd          =get(A.WORKIND_DIR),
+          fn_regex    =get(A.FILENAME_REGEX) if not get(A.ALL_FILES) else '.*',
+          encf        =eval(get(A.ENCODING_FUNCTION)) if get(A.ENCODING_FUNCTION) is not None else (lambda fn,_enc=get(A.ENCODING): _enc) if get(A.ENCODING) is not None else lambda fn: 'utf-8',
+          string      =get(A.STRING) if not get(A.STRING_LITERAL) else eval(get(A.STRING)),
+          as_regex    =get(A.REGEX),
+          show_matches=not get(A.LESS),
+          no_errors   =get(A.NO_ERRORS))
+
+if __name__ == '__main__': main()

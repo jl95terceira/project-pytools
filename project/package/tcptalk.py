@@ -43,7 +43,7 @@ def do_it(ip_addr:str,
             send(msg)
             time.sleep(1)
 
-if __name__ == '__main__':
+def main():
 
     import argparse
 
@@ -63,3 +63,5 @@ if __name__ == '__main__':
     do_it(ip_addr=ip_addr,
           port   =port,
           auto   =get(A.AUTO))
+
+if __name__ == '__main__': main()

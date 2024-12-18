@@ -51,7 +51,7 @@ def repl(client    :paramiko.SSHClient,
 
     except KeyboardInterrupt: pass
 
-if __name__ == '__main__':
+def main():
 
     import argparse
 
@@ -88,3 +88,5 @@ if __name__ == '__main__':
         
         client.close()
         print('Done')
+
+if __name__ == '__main__': main()

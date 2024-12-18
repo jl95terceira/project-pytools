@@ -47,7 +47,7 @@ def do_it(path_src    :str,
 
         pass
 
-if __name__ == '__main__':
+def main():
 
     import argparse
 
@@ -84,3 +84,5 @@ if __name__ == '__main__':
           ssh_username=get(A.DESTINATION_USER),
           ssh_password=get(A.DESTINATION_PASS),
           path_dst    =get(A.DESTINATION_PATH))
+
+if __name__ == '__main__': main()

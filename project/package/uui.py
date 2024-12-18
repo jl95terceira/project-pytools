@@ -7,7 +7,7 @@ def get(upper :bool=False,
           ((lambda u: u.replace('-','') if squash else u)\
            (str(uuid.uuid4())))
 
-if __name__ == '__main__':
+def main():
 
     import argparse
 
@@ -29,3 +29,5 @@ if __name__ == '__main__':
     # do it
     print(get(upper =get_(A.UPPER_CASE),
               squash=get_(A.SQUASH)))
+
+if __name__ == '__main__': main()

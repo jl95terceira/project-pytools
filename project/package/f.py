@@ -25,7 +25,7 @@ def do_it(fn       :str,
 
     return True
 
-if __name__ == '__main__':
+def main():
 
     import argparse
     from   jl95terceira.pytools.envlib.vars.builtin import EDITOR
@@ -64,3 +64,5 @@ if __name__ == '__main__':
     if success and get(A.OPEN):
 
         os.system(EDITOR.get()(get(A.FILE_NAME)))
+
+if __name__ == '__main__': main()

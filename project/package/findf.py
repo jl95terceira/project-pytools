@@ -25,7 +25,7 @@ def main(wd      :str,
 
         print('No occurrences.')
 
-if __name__ == '__main__':
+def main():
 
     import argparse
 
@@ -44,3 +44,5 @@ if __name__ == '__main__':
     # do it
     main(wd      =get(A.WORKING_DIRECTORY),
          fn_regex=get(A.FILE_NAME_REGEX))
+
+if __name__ == '__main__': main()

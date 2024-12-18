@@ -33,7 +33,7 @@ def get(dirs    :typing.Iterable[str]       =list(),
     
     return results_list
 
-if __name__ == '__main__':
+def main():
 
     import argparse
     
@@ -75,3 +75,5 @@ if __name__ == '__main__':
         if r.diff: dump(f'\n  Files differ between {d1} and {d2} ({len(r.diff)}):\n{'\n'.join(f'  - {fn}' for fn in r.diff)}')
     
     close()
+
+if __name__ == '__main__': main()

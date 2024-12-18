@@ -1,4 +1,4 @@
-if __name__ == '__main__':
+def main():
 
     import argparse
 
@@ -15,3 +15,5 @@ if __name__ == '__main__':
     with open(get(A.FILENAME), 'rb') as f:
 
         print(f.read())
+
+if __name__ == '__main__': main()

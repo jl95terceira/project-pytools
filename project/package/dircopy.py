@@ -6,7 +6,7 @@ def main(src:str,
     
     shutil.copytree(src=src,dst=dst)
 
-if __name__ == '__main__':
+def main():
 
     import argparse
     
@@ -23,3 +23,5 @@ if __name__ == '__main__':
     get = p.parse_args().__getattribute__
     main(src=get(A.SOURCE),
          dst=get(A.DESTINATION))
+
+if __name__ == '__main__': main()

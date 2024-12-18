@@ -19,7 +19,7 @@ def do_it(url     :str,
             message = websocket.recv()
             print(f"Received: {message}")
 
-if __name__ == '__main__':
+def main():
 
     import argparse
 
@@ -60,3 +60,5 @@ if __name__ == '__main__':
           protocol=None if get(A.ASSUME_SSL) is None else SSL_PROTOCOL_VERSION_DICT[get(A.ASSUME_SSL)] if get(A.ASSUME_SSL) is not SSL_PROTOCOL_VERSION_DEFAULT else None,
           auto_ssl=get(A.ASSUME_SSL) is     None and not get(A.ASSUME_NO_SSL),
           use_ssl =get(A.ASSUME_SSL) is not None or  not get(A.ASSUME_NO_SSL))
+
+if __name__ == '__main__': main()

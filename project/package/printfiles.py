@@ -31,7 +31,7 @@ def do_it(wd     :str,
 
                 print(f'error on printing file {fn} - {ex}')
             
-if __name__ == '__main__':
+def main():
 
     import argparse
 
@@ -60,3 +60,5 @@ if __name__ == '__main__':
           fnpat  =     get(A.FILE_FILTER_REGEX),
           encf   =eval(get(A.ENCODING_FUNC)) if get(A.ENCODING_FUNC) is not None else None,
           no_tabs=     get(A.NO_TABS))
+
+if __name__ == '__main__': main()

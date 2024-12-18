@@ -19,7 +19,7 @@ def do_it(ip_addr:str,
 
         server.serve_forever()
 
-if __name__ == '__main__':
+def main():
 
     import argparse
 
@@ -33,3 +33,5 @@ if __name__ == '__main__':
     get          = p.parse_args().__getattribute__
     ip_addr,port = get(A.NET_ADDRESS).split(':')
     do_it(ip_addr=ip_addr,port=port)
+
+if __name__ == '__main__': main()

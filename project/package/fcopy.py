@@ -8,7 +8,7 @@ def do_it(fpath_from:str,
     shutil.copyfile(src=fpath_from,
                     dst=os.path.join(dir_to, fname_to if fname_to else (os.path.split(fpath_from)[-1])))
 
-if __name__ == '__main__':
+def main():
 
     import argparse
     
@@ -29,3 +29,5 @@ if __name__ == '__main__':
     do_it(fpath_from=get(A.SOURCE_PATH),
           dir_to    =get(A.DEST_DIR),
           fname_to  =get(A.DEST_FILE_NAME))
+
+if __name__ == '__main__': main()

@@ -10,7 +10,7 @@ def do_it(fn     :str,
 
         print(preproc(f.read()))
 
-if __name__ == '__main__':
+def main():
 
     import argparse
 
@@ -34,3 +34,5 @@ if __name__ == '__main__':
     do_it(fn     =get(A.FILE_NAME),
           enc    =get(A.ENCODING),
           no_tabs=get(A.NO_TABS))
+
+if __name__ == '__main__': main()

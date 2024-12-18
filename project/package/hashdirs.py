@@ -28,7 +28,7 @@ def do_it(h    :str,
 
             f.write(log)
 
-if __name__ == '__main__':
+def main():
 
     import argparse
 
@@ -61,3 +61,4 @@ if __name__ == '__main__':
           depth=int(get(A.DEPTH))      if get(A.DEPTH)       else None,
           fn   =    get(A.OUTPUT_FILE) if get(A.OUTPUT_FILE) else None)
     
+if __name__ == '__main__': main()

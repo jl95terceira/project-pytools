@@ -1,5 +1,4 @@
 import hashlib
-import functools
 import os
 import os.path
 import typing
@@ -104,7 +103,7 @@ def _asserted_hashf(h:str):
 
     return _PREDEFINED_HASHF_FACTORIES_MAP[h]
     
-if __name__ == '__main__':
+def main():
     
     import argparse
 
@@ -157,3 +156,5 @@ if __name__ == '__main__':
                                                                                                 depth_filter=lambda depth: depth < get(A.DEPTH_MAX))
         padl        = max(map(len,map(lambda t: t[0], hashes_list)))
         print('\n'.join(f'{file_name}{(padl - len(file_name))*' '} ---- {hash_value}' for file_name,hash_value in hashes_list))
+
+if __name__ == '__main__': main()

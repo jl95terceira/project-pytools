@@ -22,7 +22,7 @@ def do_it(fn1 :str,
             if len(m1) == len(m2): return Result(section='', begin=0, end=0)
             raise NotImplementedError()
 
-if __name__ == '__main__':
+def main():
     
     import argparse
 
@@ -55,3 +55,5 @@ if __name__ == '__main__':
             res.section,
 
         )))
+
+if __name__ == '__main__': main()
