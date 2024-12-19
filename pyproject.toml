@@ -25,7 +25,7 @@ Issues = "https://github.com/jl95terceira/project-pytools/issues"
 packages = ["project/package"]
 
 [tool.hatch.build.targets.wheel.sources]
-"project/package" = "jl95terceira/pytools"
+"project/package"="jl95terceira/pytools"
 
 [tool.hatch.metadata.hooks.requirements_txt]
 files = ["requirements.txt"]
@@ -35,14 +35,14 @@ files = ["requirements.txt"]
 #import os
 #import project_constants as pc
 #app_names=dict()
-#file_names_iterator = lambda: filter(lambda file_name: file_name.endswith('.py'), os.listdir(pc.MODULE_PATH))
+#file_names_iterator = lambda: filter(lambda file_name: file_name.endswith('.py'), os.listdir(os.path.join(pc.PROJECT_PATH, 'project', 'package',)))
 #for file_name in file_names_iterator():
 #  app_names[file_name] = os.path.splitext(file_name)[0]
 #pad = max(map(len,app_names.values()))
 #for file_name in file_names_iterator():
 #  app_name = app_names[file_name]
 #  padding  = (pad-len(app_name))*' '
-#  writeline(f'"{pc.SCRIPTS_INSTALLATION_RELPATH}/{app_name}"{padding}="{pc.PACKAGE}.{app_name}:main"')
+#  writeline(f'"jl95terceira-pytools/{app_name}"{padding}="jl95terceira.pytools.{app_name}:main"')
 #PPTOML:END
 "jl95terceira-pytools/base64id"  ="jl95terceira.pytools.base64id:main"
 "jl95terceira-pytools/diff"      ="jl95terceira.pytools.diff:main"
