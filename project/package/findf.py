@@ -2,8 +2,8 @@ import os
 import os.path
 import re
 
-def main(wd      :str,
-         fn_regex:str):
+def do_it(wd      :str,
+          fn_regex:str):
 
     print(f'Looking in {wd}, where file names match {repr(fn_regex)}')
     found:list[str] = []
@@ -42,7 +42,7 @@ def main():
                    help   ='file name regex to consider')
     get = p.parse_args().__getattribute__
     # do it
-    main(wd      =get(A.WORKING_DIRECTORY),
-         fn_regex=get(A.FILE_NAME_REGEX))
+    do_it(wd      =get(A.WORKING_DIRECTORY),
+          fn_regex=get(A.FILE_NAME_REGEX))
 
 if __name__ == '__main__': main()
