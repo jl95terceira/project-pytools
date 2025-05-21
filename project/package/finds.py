@@ -32,12 +32,14 @@ def do_it(wd          :str,
             encoding = encf(full)
             with open(full, 'r', encoding=encoding) as f:
 
+                finds = list()
                 for line in f.readlines():
 
-                    finds = re.findall(pattern=f'{re.escape(string)if not as_regex else string}', string=line)
-                    if finds:
-
-                        results.append(Result(fn=full,n=len(finds),matches=finds))
+                    finds.extend(re.findall(pattern=f'{re.escape(string)if not as_regex else string}', string=line))
+                
+                if finds:
+                    
+                    results.append(Result(fn=full,n=len(finds),matches=finds))
         
         except Exception as e:
 
