@@ -100,7 +100,7 @@ def main():
     get = p.parse_args().__getattribute__
     # do it
     do_it(wd          =get(A.WORKIND_DIR),
-          fn_regex    =get(A.FILENAME_REGEX) if not get(A.ALL_FILES) else b'.*',
+          fn_regex    =get(A.FILENAME_REGEX) if not get(A.ALL_FILES) else '.*',
           string      =eval(f'b\'{get(A.STRING) if not get(A.STRING_LITERAL) else eval(get(A.STRING))}\''),
           as_regex    =get(A.REGEX),
           show_matches=not get(A.LESS),
