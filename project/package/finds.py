@@ -16,6 +16,7 @@ def do_it(wd          :str,
           encf        :typing.Callable[[str],str],
           string      :str,
           as_regex    :bool=False,
+          case_sens   :bool=False,
           show_matches:bool=True,
           no_errors   :bool=False):
 
@@ -35,7 +36,7 @@ def do_it(wd          :str,
                 finds = list()
                 for line in f.readlines():
 
-                    finds.extend(re.findall(pattern=f'{re.escape(string)if not as_regex else string}', string=line))
+                    finds.extend(re.findall(pattern=f'{'(?i)' if not case_sens else ''}{re.escape(string) if not as_regex else string}', string=line))
                 
                 if finds:
                     
@@ -74,6 +75,7 @@ def main():
         STRING            = 'string'
         STRING_LITERAL    = 'literal'
         REGEX             = 're'
+        CASE_SENSITIVE    = 'case'
         LESS              = 'less'
         NO_ERRORS         = 'noerror'
 
@@ -100,6 +102,9 @@ def main():
     p.add_argument(f'--{A.REGEX}',
                    help='consider string as regex',
                    action='store_true')
+    p.add_argument(f'--{A.CASE_SENSITIVE}',
+                   help='case sensitive',
+                   action='store_true')
     p.add_argument(f'--{A.LESS}',
                    help=f'do NOT print matches, in the case of regex search (less verbose)\nBy default, when matching with a regex via option {A.REGEX}, the matches are printed along with the occurrences.',
                    action='store_true')
@@ -118,6 +123,7 @@ def main():
           encf        =eval(get(A.ENCODING_FUNCTION)) if get(A.ENCODING_FUNCTION) is not None else (lambda fn,_enc=get(A.ENCODING): _enc) if get(A.ENCODING) is not None else lambda fn: 'utf-8',
           string      =get(A.STRING) if not get(A.STRING_LITERAL) else eval(get(A.STRING)),
           as_regex    =get(A.REGEX),
+          case_sens   =get(A.CASE_SENSITIVE),
           show_matches=not get(A.LESS),
           no_errors   =get(A.NO_ERRORS))
 
