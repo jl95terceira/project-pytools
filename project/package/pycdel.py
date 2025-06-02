@@ -12,7 +12,8 @@ def del_cache_dir(d:str):
 
         if fn.endswith(_PYCACHE_FILE_NAME_EXT):
 
-            print(f'    {repr(os.path.join(d, fn))}')
+            fn_full = os.path.join(d, fn)
+            os.remove(fn_full)
 
         else:
 
@@ -20,7 +21,7 @@ def del_cache_dir(d:str):
 
     if to_delete_dir:
 
-        #os.rmdir(d)
+        os.rmdir(d)
         print(f'Remove {repr(d)}')
 
 def do_it(wd       :str,
