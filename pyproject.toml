@@ -37,7 +37,7 @@ files = ["requirements.txt"]
 #for file_name in filter(lambda file_name: file_name.endswith('.py'), os.listdir(os.path.join(project.PATH, 'project', 'package',))):
 #  app_name = os.path.splitext(file_name)[0]
 #  padding  = (12-len(app_name))*' '
-#  writeline(f'"jl95terceira-pytools/{app_name}"{padding}="jl95terceira.pytools.{app_name}:main"')
+#  writeline(f'"{project.TOOLS_DIR}/{app_name}"{padding}="jl95terceira.pytools.{app_name}:main"')
 #PPTOML:END
 "jl95terceira-pytools/base64id"    ="jl95terceira.pytools.base64id:main"
 "jl95terceira-pytools/diff"        ="jl95terceira.pytools.diff:main"
