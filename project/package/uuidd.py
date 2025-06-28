@@ -1,11 +1,11 @@
-import uuid
+from uuid import *
 
 def get(upper :bool=False,
         squash:bool=False):
 
     return (lambda u: u.upper  ()       if upper  else u)\
           ((lambda u: u.replace('-','') if squash else u)\
-           (str(uuid.uuid4())))
+           (str(uuid4())))
 
 def main():
 
