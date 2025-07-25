@@ -17,12 +17,12 @@ def do_it(wd          :str,
           string      :str,
           as_regex    :bool=False,
           case_sens   :bool=False,
-          show_matches:bool=True,
-          no_errors   :bool=False):
+          file_exc_cb :typing.Callable[[str,Exception],None]|None=None,
+          not_        :bool=False):
 
+    if file_exc_cb is None: file_exc_cb = lambda fp,ex: None
     if not isinstance(encf, typing.Callable): raise Exception(f'encoding is expected as function of filename (callable) - got type {type(encf)} instead')
     pattern = re.compile(fn_regex)
-    print(f'Looking for {repr(string)} in {wd}, where file names match {repr(fn_regex)}')
     results:list[Result] = []
     for full,rel in ((                os.path.join(dp, fn),
                       os.path.relpath(os.path.join(dp, fn), start=wd)) for dp,dns,fns in os.walk(wd) for fn in fns):
@@ -38,28 +38,16 @@ def do_it(wd          :str,
 
                     finds.extend(re.findall(pattern=f'{'(?i)' if not case_sens else ''}{re.escape(string) if not as_regex else string}', string=line))
                 
-                if finds:
+                if ((    finds) and (not not_)) or \
+                   ((not finds) and (    not_)):
                     
                     results.append(Result(fn=full,n=len(finds),matches=finds))
         
-        except Exception as e:
+        except Exception as ex:
 
-            if not no_errors:
-                
-                print(f'Exception at file {rel}: {e}')
+            file_exc_cb(rel, ex)
     
-    lens = list(map(len,(result.fn for result in results)))
-    if lens:
-
-        fnpad = max(lens)
-        opad  = max(map(len,map(str,(result.n for result in results))))
-        for result in results:
-
-            print('>>> ' + result.fn + (fnpad-len(result.fn))*' ' + f' -> {(opad-len(str(result.n)))*' '}{result.n} occurrences{'' if not as_regex or not show_matches else f': {repr(sorted(set(match if isinstance(match,str) else match[0] for match in result.matches)))}'}')
-    
-    else:
-
-        print('Not any file with occurrences.')
+    return results
 
 def main():
 
@@ -78,6 +66,7 @@ def main():
         CASE_SENSITIVE    = 'case'
         LESS              = 'less'
         NO_ERRORS         = 'noerror'
+        NOT               = 'not'
 
     p = argparse.ArgumentParser(formatter_class=argparse.RawTextHelpFormatter,
                                 description='Find a string within files\nFiles may be filtered by their names according to a given expression.\nThe string to search may be given as an expression.')
@@ -111,6 +100,9 @@ def main():
     p.add_argument(f'--{A.NO_ERRORS}',
                    help=f'silence errors when they happen\nBy default, errors on opening files for reading are printed.',
                    action='store_true')
+    p.add_argument(f'--{A.NOT}',
+                   help=f'print files for which there are NOT occurrences',
+                   action='store_true')
     get = p.parse_args().__getattribute__
     # do it
     enc_excl  = (A.ENCODING, A.ENCODING_FUNCTION,)
@@ -118,13 +110,32 @@ def main():
 
         raise Exception(f'all of options {enc_excl} given - only 1 allowed')
 
-    do_it(wd          =get(A.WORKIND_DIR),
-          fn_regex    =get(A.FILENAME_REGEX) if not get(A.ALL_FILES) else '.*',
-          encf        =eval(get(A.ENCODING_FUNCTION)) if get(A.ENCODING_FUNCTION) is not None else (lambda fn,_enc=get(A.ENCODING): _enc) if get(A.ENCODING) is not None else lambda fn: 'utf-8',
-          string      =get(A.STRING) if not get(A.STRING_LITERAL) else eval(get(A.STRING)),
-          as_regex    =get(A.REGEX),
-          case_sens   =get(A.CASE_SENSITIVE),
-          show_matches=not get(A.LESS),
-          no_errors   =get(A.NO_ERRORS))
+    wd      :str  = get(A.WORKIND_DIR)
+    string  :str  = get(A.STRING) if not get(A.STRING_LITERAL) else eval(get(A.STRING))
+    as_regex:bool = get(A.REGEX)
+    fn_regex:str  = get(A.FILENAME_REGEX) if not get(A.ALL_FILES) else '.*'
+    not_    :bool = get(A.NOT)
+    show_matches  = not get(A.LESS)
+    print(f'Looking for {repr(string)} in {wd}, where file names {'match' if not not_ else 'do NOT match'} {repr(fn_regex)}')
+    results = do_it(wd          =wd,
+                    fn_regex    =fn_regex,
+                    encf        =eval(get(A.ENCODING_FUNCTION)) if get(A.ENCODING_FUNCTION) is not None else (lambda fn,_enc=get(A.ENCODING): _enc) if get(A.ENCODING) is not None else lambda fn: 'utf-8',
+                    string      =string,
+                    as_regex    =as_regex,
+                    case_sens   =get(A.CASE_SENSITIVE),
+                    file_exc_cb =lambda fp,ex: print(f'Exception at file {fp}: {ex}') if not get(A.NO_ERRORS) else None,
+                    not_        =not_)
+    lens = list(map(len,(result.fn for result in results)))
+    if lens:
+
+        fnpad = max(lens)
+        opad  = max(map(len,map(str,(result.n for result in results))))
+        for result in results:
+
+            print('>>> ' + result.fn + (((fnpad-len(result.fn))*' ' + f' -> {(opad-len(str(result.n)))*' '}{result.n} occurrences{'' if not as_regex or not show_matches else f': {repr(sorted(set(match if isinstance(match,str) else match[0] for match in result.matches)))}'}') if result.n else ''))
+    
+    else:
+
+        print('Not any file with occurrences.')    
 
 if __name__ == '__main__': main()
