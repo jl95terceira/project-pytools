@@ -116,7 +116,7 @@ def main():
     fn_regex:str  = get(A.FILENAME_REGEX) if not get(A.ALL_FILES) else '.*'
     not_    :bool = get(A.NOT)
     show_matches  = not get(A.LESS)
-    print(f'Looking for {repr(string)} in {wd}, where file names {'match' if not not_ else 'do NOT match'} {repr(fn_regex)}')
+    print(f'Looking for {'presence' if not not_ else 'absence'} of {repr(string)} in {wd}, where file names match {repr(fn_regex)}')
     results = do_it(wd          =wd,
                     fn_regex    =fn_regex,
                     encf        =eval(get(A.ENCODING_FUNCTION)) if get(A.ENCODING_FUNCTION) is not None else (lambda fn,_enc=get(A.ENCODING): _enc) if get(A.ENCODING) is not None else lambda fn: 'utf-8',
