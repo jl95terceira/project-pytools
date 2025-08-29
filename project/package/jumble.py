@@ -62,28 +62,40 @@ class Jumbler:
                             f[:-len(FILE_ENCRYPTED_TAIL)] if f.endswith(FILE_ENCRYPTED_TAIL) else \
                             f'{f}{FILE_DECRYPTED_TAIL}',de=True)
 
+class Mode:  
+    def __init__(self,descr:str): self._descr = descr
+class Modes:
+    PEEK = Mode('peek')
+    EDIT = Mode('edit')
+
 def do_it(f  :str,
           key:str,
           cleanup=False,
           de     =False,
-          peek   =False):
+          mode   :Mode|None=None):
 
     jumbler = Jumbler(key=key)
-    if peek:
+    if mode is Modes.PEEK:
 
         fo=jumbler.unjumble(f)
-        print('Peeking...')
         subprocess.Popen([fo,],shell=True).wait()
         os.remove(fo)
-        print('Done. Peek file deleted.')
 
-    else:
+    elif mode is Modes.EDIT:
+
+        fo=jumbler.unjumble(f)
+        subprocess.Popen([fo,],shell=True).wait()
+        do_it(fo, key, cleanup=True)
+
+    elif mode is None:
     
         (jumbler.jumble if not de else \
          jumbler.unjumble)(f)
         if cleanup:
 
             os.remove(f)
+
+    else: raise AssertionError()
 
 def main():
 
@@ -93,6 +105,7 @@ def main():
         CLEANUP ='c'
         DECRYPT ='de'
         PEEK    ='peek'
+        EDIT    ='edit'
     ap = argparse.ArgumentParser(description=f'Encrypt / Decrypt a file\nThe default action is to encrypt. To decrypt, set option {repr(A.DECRYPT)}.')
     ap.add_argument(f'{A.PATH}',
                     help='path to the file')
@@ -107,11 +120,20 @@ def main():
     ap.add_argument(f'--{A.PEEK}',
                     help='decrypt and open the decrypted file with the system\'s default editor. After closing, the decrypted file will be removed.',
                     action='store_true',)
+    ap.add_argument(f'--{A.EDIT}',
+                    help='decrypt, open the decrypted file with the system\'s default editor, save and re-encrypt.\nThis option is useful for quickly editing an encrypted file.',
+                    action='store_true',)
     get = ap.parse_args().__getattribute__
+    mode = Modes.PEEK if get(A.PEEK) else \
+           Modes.EDIT if get(A.EDIT) else \
+           None
+    if mode is not None:
+        print(f'Mode: {mode._descr}')
     do_it(get(A.PATH),
           get(A.KEY),
           cleanup=get(A.CLEANUP),
           de=get(A.DECRYPT),
-          peek=get(A.PEEK))
+          mode=mode)
+    print('Done')
 
 if __name__ == '__main__': main()
