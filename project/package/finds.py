@@ -57,6 +57,7 @@ def main():
 
         WORKIND_DIR       = 'wd'
         FILENAME_REGEX    = 'fre'
+        FILENAME_CASE_SENSITIVE = 'fcase'
         ALL_FILES         = 'all'
         ENCODING          = 'enc'
         ENCODING_FUNCTION = 'encf'
@@ -76,6 +77,9 @@ def main():
     p.add_argument(f'--{A.FILENAME_REGEX}',
                    help=f'file name regex to use for filtering files in which to find the given string\nDefaults to all files that don\'t start with a dot (".").\nYou can override this option to look in all files by giving option {repr(A.ALL_FILES)}.',
                    default='^(?!\\.)')
+    p.add_argument(f'--{A.FILENAME_CASE_SENSITIVE}',
+                   help='filename case sensitive',
+                   action='store_true')
     p.add_argument(f'--{A.ALL_FILES}',
                    help=f'look in all files - equivalent to setting option {repr(A.FILENAME_REGEX)} as ".*"',
                    action='store_true')
@@ -113,7 +117,7 @@ def main():
     wd      :str  = get(A.WORKIND_DIR)
     string  :str  = get(A.STRING) if not get(A.STRING_LITERAL) else eval(get(A.STRING))
     as_regex:bool = get(A.REGEX)
-    fn_regex:str  = get(A.FILENAME_REGEX) if not get(A.ALL_FILES) else '.*'
+    fn_regex:str  = f'{'(?i)' if not get(A.FILENAME_CASE_SENSITIVE) else ''}{get(A.FILENAME_REGEX) if not get(A.ALL_FILES) else '.*'}'
     not_    :bool = get(A.NOT)
     show_matches  = not get(A.LESS)
     print(f'Looking for {'presence' if not not_ else 'absence'} of {repr(string)} in {wd}, where file names match {repr(fn_regex)}')
