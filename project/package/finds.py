@@ -62,7 +62,7 @@ def main():
         ENCODING          = 'enc'
         ENCODING_FUNCTION = 'encf'
         STRING            = 'string'
-        STRING_LITERAL    = 'literal'
+        EVAL              = 'eval'
         REGEX             = 're'
         CASE_SENSITIVE    = 'case'
         LESS              = 'less'
@@ -89,8 +89,8 @@ def main():
                    help   ='the text encoding to consider for each file, given the file name, as a function literal (\'lambda fn: ...\') - alternative to option \'--enc\'')
     p.add_argument(f'{A.STRING}',
                    help='string to look for in files')
-    p.add_argument(f'--{A.STRING_LITERAL}',
-                   help=f'take the given string as a Python string literal\nThis option allows for passing newlines as {repr('\n')}, tabs as {repr('\t')}, etc - literal backslashes ({repr('\\')}) must be doubled',
+    p.add_argument(f'--{A.EVAL}',
+                   help=f'evaluate the given string as a Python expression that is expected to return the actual string to search\nThis option is useful for passing newlines as {repr('\n')}, tabs as {repr('\t')}, etc - literal backslashes ({repr('\\')}) must be doubled',
                    action='store_true')
     p.add_argument(f'--{A.REGEX}',
                    help='consider string as regex',
@@ -115,7 +115,7 @@ def main():
         raise Exception(f'all of options {enc_excl} given - only 1 allowed')
 
     wd      :str  = get(A.WORKIND_DIR)
-    string  :str  = get(A.STRING) if not get(A.STRING_LITERAL) else eval(get(A.STRING))
+    string  :str  = get(A.STRING) if not get(A.EVAL) else eval(get(A.STRING))
     as_regex:bool = get(A.REGEX)
     fn_regex:str  = f'{'(?i)' if not get(A.FILENAME_CASE_SENSITIVE) else ''}{get(A.FILENAME_REGEX) if not get(A.ALL_FILES) else '.*'}'
     not_    :bool = get(A.NOT)
