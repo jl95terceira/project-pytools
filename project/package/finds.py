@@ -136,7 +136,7 @@ def main():
         opad  = max(map(len,map(str,(result.n for result in results))))
         for result in results:
 
-            print('>>> ' + result.fn + (((fnpad-len(result.fn))*' ' + f' -> {(opad-len(str(result.n)))*' '}{result.n} occurrences{'' if not as_regex or not show_matches else f': {repr(sorted(set(match if isinstance(match,str) else match[0] for match in result.matches)))}'}') if result.n else ''))
+            print('>>> ' + result.fn + (((fnpad-len(result.fn))*' ' + f' -> {(opad-len(str(result.n)))*' '}{result.n} occurrences{'' if not as_regex or not show_matches else f': {''.join(f'\n{4*' '}{repr(x)}' for x in sorted(set(match if isinstance(match,str) else match[0] for match in result.matches)))}'}') if result.n else ''))
     
     else:
 
