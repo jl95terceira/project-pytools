@@ -1,12 +1,14 @@
+import argparse
 import json
 import os
 import os.path
 import re
 import typing
 
-VERSION_MARK_UUID          = 'd85edb88-afca-4036-a70c-14f998ceb29c'
-MANIFEST_FILE_NAME         = '__mf__.json'
-MANIFEST_MAGIC_WORD        = '7EA508DFCE5546468ADF133FFFCB1F39'
+from jl95terceira.batteries import *
+from jl95terceira.pytools.envlib.vars import git as varsgit
+
+VERSION_MARK_UUID = 'd85edb88-afca-4036-a70c-14f998ceb29c'
 
 def batch(wd, cmds:typing.Iterable[str]):
 
@@ -44,37 +46,30 @@ def do_it(wd                :str,
           tag_message       :str ='',
           auto_push         :bool=False,
           remote            :str|None=None,
-          mf_extra          :typing.Callable[[],dict[str,typing.Any]]=lambda: {}):
+          ):
 
-    for fn in (os.path.join(dpath,fn) for dpath,dnn,fnn in os.walk(top=wd) for fn in fnn):
+    #TODO: move these file formatting instructions to another script or project.
+    #This script / module should be file format-agnostic.
+    # for fn in (os.path.join(dpath,fn) for dpath,dnn,fnn in os.walk(top=wd) for fn in fnn):
 
-        if fn.endswith('.java'):
+    #     if fn.endswith('.java'):
 
-            reil(fn     =fn, 
-                 fenc   ='utf-8', 
-                 pattern=f'(/\\*{re.escape(VERSION_MARK_UUID)}\\*/)(.*?)(/\\*/{re.escape(VERSION_MARK_UUID)}\\*/)', 
-                 repl   =lambda match: f'{match.group(1)}"{version}"{match.group(3)}')
+    #         reil(fn     =fn, 
+    #              fenc   ='utf-8', 
+    #              pattern=f'(/\\*{re.escape(VERSION_MARK_UUID)}\\*/)(.*?)(/\\*/{re.escape(VERSION_MARK_UUID)}\\*/)', 
+    #              repl   =lambda match: f'{match.group(1)}"{version}"{match.group(3)}')
         
-        elif fn.endswith('.xml'):
+    #     elif fn.endswith('.xml'):
 
-            reil(fn     =fn,
-                 fenc   ='utf-8',
-                 pattern=f'(<!--{re.escape(VERSION_MARK_UUID)}--><version>)(.*?)(</version><!--/{re.escape(VERSION_MARK_UUID)}-->)',
-                 repl   =lambda match: f'{match.group(1)}{version}{match.group(3)}')
-
-    with open(os.path.join(wd,MANIFEST_FILE_NAME), 'w', encoding='utf-8') as fmanifest:
-
-        json.dump(obj={
-            'Version'  :version,
-            **(mf_extra()),
-            'MagicWord':MANIFEST_MAGIC_WORD
-        },fp=fmanifest,indent=4)
+    #         reil(fn     =fn,
+    #              fenc   ='utf-8',
+    #              pattern=f'(<!--{re.escape(VERSION_MARK_UUID)}--><version>)(.*?)(</version><!--/{re.escape(VERSION_MARK_UUID)}-->)',
+    #              repl   =lambda match: f'{match.group(1)}{version}{match.group(3)}')
 
     tag         = f'{tag_prefix}{version}'
     tag_message = tag_message if tag_message else f'auto-generated tag for version {version}'
     batch(wd, (
 
-        f'"{git}" add . && "{git}" commit -m "{tag_message}"',
         f'"{git}" tag -a "{tag}" -m "{tag_message}"',
     ))
     if auto_push:
@@ -85,31 +80,24 @@ def do_it(wd                :str,
             f'"{git}" push {remote} "{tag}"',
         ))
 
-if __name__ == '__main__':
+class A:
 
-    import argparse
-    import env
+    WORKING_DIR = 'wd'
+    GIT         = 'git'
+    VERSION     = 'v'
+    NO_PREFIX   = 'nop'
+    MESSAGE     = 'm'
+    AUTO_PUSH   = 'push'
+    REMOTE      = 'remote'
 
-    class A:
+def add_args_without_version(p:argparse.ArgumentParser):
 
-        WORKING_DIR = 'wd'
-        GIT         = 'git'
-        VERSION     = 'v'
-        NO_PREFIX   = 'nop'
-        MESSAGE     = 'm'
-        AUTO_PUSH   = 'push'
-        REMOTE      = 'remote'
-
-    p = argparse.ArgumentParser(formatter_class=argparse.RawTextHelpFormatter,
-                                description    ='Version a project with a git tag')
     p.add_argument(f'--{A.WORKING_DIR}',
                    help   ='working directory',
                    default='.')
     p.add_argument(f'--{A.GIT}', 
                    help   ='git command - assumed by default as simply \'git\'',
-                   default=env.Vars.GIT.get_or('git'))
-    p.add_argument(f'{A.VERSION}',
-                   help   ='version number / string')
+                   default=varsgit.GIT.get_or('git'))
     p.add_argument(f'--{A.NO_PREFIX}',
                    help   ='no tag prefix\nBy default, the git tag is named as the version prefixed with \'v\'.\nGive this option, to name the tag directly as the given version - useful when we want version tags for different scenarios.',
                    action='store_true')
@@ -121,13 +109,36 @@ if __name__ == '__main__':
                    action='store_true')
     p.add_argument(f'--{A.REMOTE}',
                    help   ='name of git remote')
-    
+
+def add_version_arg(p:argparse.ArgumentParser):
+
+    p.add_argument(f'{A.VERSION}',
+                   help='version number / string')
+
+def main_given_version(version_getter:typing.Callable[[str,typing.Callable[[str],typing.Any]],str],
+                       description:str|None=None):
+
+    main(description=description,
+         argparser_cb=None,
+         version_getter=version_getter)
+
+def main(description:str|None=None,
+         argparser_cb  :typing.Callable[[argparse.ArgumentParser],None]|None=add_version_arg,
+         version_getter:typing.Callable[[str,typing.Callable[[str],typing.Any]],str]=lambda wd,agetter: agetter(A.VERSION)):
+
+    p = argparse.ArgumentParser(formatter_class=argparse.RawTextHelpFormatter,
+                                description    =description if description is not None else 'Version a project with a git tag')
+    add_args_without_version(p)
+    (argparser_cb if argparser_cb is not None else lambda p_: None)(p)
     def get(a:str,_args=p.parse_args()): return getattr(_args,a)
+    wd = get(A.WORKING_DIR)
     # do it
-    do_it(wd         =get(A.WORKING_DIR),
+    do_it(wd         =wd,
           git        =get(A.GIT),
-          version    =get(A.VERSION),
+          version    =version_getter(wd,get),
           tag_prefix ='v' if not get(A.NO_PREFIX) else '',
           tag_message=get(A.MESSAGE),
           auto_push  =get(A.AUTO_PUSH),
           remote     =get(A.REMOTE))
+
+if __name__ == '__main__': main()
