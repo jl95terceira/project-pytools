@@ -3,7 +3,7 @@ requires = ["hatchling", "hatch-requirements-txt"]
 build-backend = "hatchling.build"
 [project]
 name = "jl95terceira_pytools"
-version = "0.14.1"
+version = "0.15.1"
 authors = [
   { name="Joao Luis Ornelas da Silva", email="jl95terceira@gmail.com" },
 ]
@@ -92,7 +92,6 @@ files = ["requirements.txt"]
 "jl95terceira-pytools/pwd"         ="jl95terceira.pytools.pwd:main"
 "jl95-pytools/pycdel"              ="jl95.pytools.pycdel:main"
 "jl95terceira-pytools/pycdel"      ="jl95terceira.pytools.pycdel:main"
-"jl95-pytools/tcplisten"           ="jl95.pytools.tcplisten:main"
 "jl95terceira-pytools/tcplisten"   ="jl95terceira.pytools.tcplisten:main"
 "jl95-pytools/tcpt"                ="jl95.pytools.tcpt:main"
 "jl95terceira-pytools/tcpt"        ="jl95terceira.pytools.tcpt:main"
