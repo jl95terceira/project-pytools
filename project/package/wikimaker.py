@@ -1,8 +1,8 @@
 import os
 import os.path
 
-from   jl95terceira         import batteries
-from   jl95terceira.pytools import envlib as env
+from   jl95         import batteries
+from   jl95.pytools import envlib as env
 
 THIS_DIR         = os.path.split(__file__)[0]
 OUTPUT_FILE_PATH = os.path.join(batteries.os.TEMP_DIR,'pytools-wiki.md')

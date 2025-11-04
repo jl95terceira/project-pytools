@@ -5,8 +5,8 @@ import os.path
 import re
 import typing
 
-from jl95.batteries import *
-from jl95.pytools.envlib.vars import git as varsgit
+from jl95terceira.batteries import *
+from jl95terceira.pytools.envlib.vars import git as varsgit
 
 VERSION_MARK_UUID = 'd85edb88-afca-4036-a70c-14f998ceb29c'
 

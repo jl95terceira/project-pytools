@@ -4,7 +4,7 @@ import re
 import typing
 import paramiko
 
-from jl95terceira.batteries import *
+from jl95.batteries import *
 
 def do_it(path_src    :str,
           fn_filter   :typing.Callable[[str],bool],

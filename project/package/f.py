@@ -1,6 +1,5 @@
 import os
 import os.path
-import subprocess
 import typing
 
 def do_it(fn       :str,
@@ -28,7 +27,7 @@ def do_it(fn       :str,
 def main():
 
     import argparse
-    from   jl95terceira.pytools.envlib.vars.builtin import EDITOR
+    from   jl95.pytools.envlib.vars.builtin import EDITOR
 
     class A:
 
