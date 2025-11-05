@@ -1,4 +1,5 @@
-jl95terceira_pytools_env>=0.2.7
+jl95terceira_pytools_env>=0.2.8
+jl95terceira_pytools_env_git>=0.1.3
 bcrypt==5.0.0
 cffi==2.0.0
 cryptography==46.0.3
