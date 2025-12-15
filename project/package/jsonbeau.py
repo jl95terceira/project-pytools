@@ -3,44 +3,46 @@ import json
 import subprocess
 import sys
 
-def do_it(args      :str|list[str],
-          is_command:bool,
-          indent    :int|None):
+def do_it(flat  :str,
+          indent:int|None):
     
-    if isinstance(args,str):
-        args = [args,]
-    if not is_command:
-        out=args[0]
-    else:
-        out = subprocess.run(args,shell=True,capture_output=True).stdout.decode()
-
-    try:
-        return json.dumps(json.loads(out), indent=indent) if out.strip() else out
-    except:
-        return f'Could not parse as JSON\nOriginal:\n{out}'
+    return json.dumps(json.loads(flat), indent=indent) if flat.strip() else flat
 
 def main(indent:int|None=2):
 
     class A:
         ARGS        = 'args'
-        COMMAND     = 'c'
-        INTERACTIVE = 'i'
+        COMMAND     = 'command'
+        INTERACTIVE = 'interactive'
     ap = argparse.ArgumentParser(description='JSON beautifier for literals and command outputs')
-    ap.add_argument(f'--{A.COMMAND}', 
-                    help='interpret argument(s) as a command',
+    group = ap.add_mutually_exclusive_group()
+    group.add_argument(f'--{A.COMMAND}','-c', 
+                    help='interpret argument(s) as a command\nOtherwise, expect single argument as JSON literal',
+                    action='store_true')
+    group.add_argument(f'--{A.INTERACTIVE}','-i',
+                    help='interactive input - useful if you want to pass the JSON literal without escaping any characters (quotes, etc)',
                     action='store_true')
     ap.add_argument(f'{A.ARGS}', 
                     help='arguments - JSON literal or command token(s)',
                     nargs='*')
-    ap.add_argument(f'--{A.INTERACTIVE}',
-                    help='interactive input - useful if you want to paste the JSON literal without escaping any characters (quotes, etc)',
-                    action='store_true')
     # parse args
     get = ap.parse_args().__getattribute__
+    args:list[str] = get(A.ARGS)
+    is_command:bool = get(A.COMMAND)
+    interactive:bool = get(A.INTERACTIVE)
     # do it
-    print(do_it(args      =get(A.ARGS) if not get(A.INTERACTIVE) else input('Enter JSON literal: '),
-                is_command=get(A.COMMAND),
-                indent    =indent))
-    
+    if not is_command:
+        if not interactive:
+            if len(args) != 1:
+                raise Exception('Expected single argument as JSON literal')
+            flat=args[0]
+        else:
+            flat=input('Enter JSON literal: ')
+    else:
+        flat= subprocess.run(args,
+                             shell=True,
+                             capture_output=True).stdout.decode()
+    print(do_it(flat  =flat,
+                indent=indent))
 
 if __name__ == '__main__': main()
