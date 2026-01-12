@@ -34,26 +34,35 @@ def do_it(wd:str,
 
 def main():
 
-    ap = argparse.ArgumentParser(description='Run command on directories recursively')
+    ap = argparse.ArgumentParser(description='Run command on directories recursively',
+                                 formatter_class=argparse.RawTextHelpFormatter)
     class A:
         WD = 'wd'
         DEPTH = 'depth'
+        NO_DEPTH = 'no-depth'
         COMMAND = 'cmd'
+    class Defaults:
+        DEPTH = 1
     ap.add_argument(f'--{A.WD}', 
                     help='working directory')
-    ap.add_argument(f'--{A.DEPTH}', 
-                    type=int,
-                    help='maximum recursion depth',
-                    default=None)
+    depth_args = ap.add_mutually_exclusive_group()
+    depth_args.add_argument(f'--{A.DEPTH}','-d',
+                            type=int,
+                            help=f'maximum recursion depth\nDefault: {repr(Defaults.DEPTH)}',
+                            default=Defaults.DEPTH)
+    depth_args.add_argument(f'--{A.NO_DEPTH}',
+                            help='no recursion depth limit',
+                            action='store_true')
     ap.add_argument(f'{A.COMMAND}', 
                     nargs=argparse.REMAINDER,
                     help='command to run on each directory')
     get = ap.parse_args().__getattribute__
-    wd     :str = get(A.WD) if get(A.WD) is not None else os.getcwd()
-    command:typing.Iterable[str] = get(A.COMMAND)
-    depth  :int|None = get(A.DEPTH)
-    do_it(wd=wd,
+    wd      :str  = get(A.WD) if get(A.WD) is not None else os.getcwd()
+    command :typing.Iterable[str] = get(A.COMMAND)
+    no_depth:bool = get(A.NO_DEPTH.replace('-','_'))
+    depth   :int  = get(A.DEPTH)
+    do_it(wd     =wd,
           command=command,
-          depth=depth)
+          depth  =depth if not no_depth else None)
 
 if __name__ == '__main__': main()
