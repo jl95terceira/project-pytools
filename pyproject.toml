@@ -3,7 +3,7 @@ requires = ["hatchling", "hatch-requirements-txt"]
 build-backend = "hatchling.build"
 [project]
 name = "jl95terceira_pytools"
-version = "1.0.1"
+version = "1.1.0"
 authors = [
   { name="Joao Luis Ornelas da Silva", email="jl95terceira@gmail.com" },
 ]
@@ -72,8 +72,6 @@ files = ["requirements.txt"]
 "jl95terceira-pytools/hashf"       ="jl95terceira.pytools.hashf:main"
 "jl95-pytools/jsonbeau"            ="jl95.pytools.jsonbeau:main"
 "jl95terceira-pytools/jsonbeau"    ="jl95terceira.pytools.jsonbeau:main"
-"jl95-pytools/jsonflat"            ="jl95.pytools.jsonflat:main"
-"jl95terceira-pytools/jsonflat"    ="jl95terceira.pytools.jsonflat:main"
 "jl95-pytools/jumble"              ="jl95.pytools.jumble:main"
 "jl95terceira-pytools/jumble"      ="jl95terceira.pytools.jumble:main"
 "jl95-pytools/listdirs"            ="jl95.pytools.listdirs:main"
@@ -92,6 +90,11 @@ files = ["requirements.txt"]
 "jl95terceira-pytools/pwd"         ="jl95terceira.pytools.pwd:main"
 "jl95-pytools/pycdel"              ="jl95.pytools.pycdel:main"
 "jl95terceira-pytools/pycdel"      ="jl95terceira.pytools.pycdel:main"
+"jl95-pytools/recurse"             ="jl95.pytools.recurse:main"
+"jl95terceira-pytools/recurse"     ="jl95terceira.pytools.recurse:main"
+"jl95-pytools/swxml"               ="jl95.pytools.swxml:main"
+"jl95terceira-pytools/swxml"       ="jl95terceira.pytools.swxml:main"
+"jl95-pytools/tcplisten"           ="jl95.pytools.tcplisten:main"
 "jl95terceira-pytools/tcplisten"   ="jl95terceira.pytools.tcplisten:main"
 "jl95-pytools/tcpt"                ="jl95.pytools.tcpt:main"
 "jl95terceira-pytools/tcpt"        ="jl95terceira.pytools.tcpt:main"

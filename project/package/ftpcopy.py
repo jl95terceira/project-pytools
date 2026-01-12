@@ -75,10 +75,11 @@ def main():
                    help='destination (remote) path')
     get = p.parse_args().__getattribute__
     # do it
-    ip_addr,port = (lambda a,b: (a, int(b)))(*map(str.strip, str(get(A.DESTINATION_ADDRESS)).split(':')))
+    ip_addr,port = (lambda x: (x[0], int(x[1])))(tuple(map(str.strip, str(get(A.DESTINATION_ADDRESS)).split(':'))))
     print([ip_addr, port])
     do_it(path_src    =get(A.SOURCE_PATH),
-          fn_filter   =re.compile(pattern=get(A.FILENAME_REGEX)).search if get(A.FILENAME_REGEX) is not None else constant(True),
+          fn_filter   =(lambda s,_f=re.compile(pattern=get(A.FILENAME_REGEX)): (_f.search(s) is not None)) if get(A.FILENAME_REGEX) is not None else \
+                       constant(True),
           ssh_ip_addr =ip_addr,
           ssh_port    =port,
           ssh_username=get(A.DESTINATION_USER),
